@@ -1,0 +1,9 @@
+{
+  "name": "game-pdf-report-email",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "send": "node --experimental-strip-types scripts/send_game_report.ts"
+  }
+}
