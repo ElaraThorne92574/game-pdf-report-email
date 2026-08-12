@@ -1,6 +1,6 @@
 # Email a game user's generated PDF report
 
-Run the sender when a game backend has finished assembling a user's match summary. It creates a small PDF in memory, puts a download link for that PDF in the HTML email, and prints the returned `message_id`. Infrai keeps the integration to one `POST` request behind `infrai.email.send`.
+You trigger this sender once your game backend has finished assembling a user's match summary. It builds a small PDF in memory, drops a download link for that PDF into the HTML email, and prints the returned `message_id`. Infrai keeps the whole integration to a single `POST` request behind `infrai.email.send`.
 
 ## Send one report
 
@@ -10,17 +10,17 @@ export GAME_REPORT_TO=player@example.com
 npm run send
 ```
 
-The request uses the default sender, so there is no sender configuration in the example. The recipient, subject, and HTML body are the complete send payload. The generated document is deliberately small and uses only built-in TypeScript and Node APIs.
+The request uses the default sender, so there's no sender config cluttering the example. The recipient, subject, and HTML body are the entire send payload. The generated document stays deliberately small and relies only on built-in TypeScript and Node APIs.
 
 ## Reliability points
 
-`src/infrai_email.ts` reads the `{ok, data, error, metadata}` envelope and turns an unsuccessful reply into an exception. HTTP 429 responses use `Retry-After` when supplied, with exponential backoff otherwise. Every retry carries the same `Idempotency-Key`, derived from the report recipient, so a transient retry represents the same send request.
+`src/infrai_email.ts` reads the `{ok, data, error, metadata}` envelope and turns an unsuccessful reply into an exception. HTTP 429 responses respect `Retry-After` when it's present, falling back to exponential backoff otherwise. Every retry carries the same `Idempotency-Key`, derived from the report recipient, so a transient retry maps to the same send request.
 
-`src/pdf_report.ts` contains the report format. Replace its three arguments with the match data from your backend. The email body carries the generated PDF as a data URL; this keeps the example within the documented email fields and avoids a second storage service.
+`src/pdf_report.ts` holds the report format. Swap its three arguments with the match data from your backend. The email body embeds the generated PDF as a data URL; this keeps the example inside the documented email fields and avoids spinning up a second storage service.
 
 ## Files
 
-The executable is `scripts/send_game_report.ts`. The HTTP boundary is `src/infrai_email.ts`; PDF creation and email rendering live in `src/pdf_report.ts`. There is no SDK dependency.
+The executable is `scripts/send_game_report.ts`. The HTTP boundary is `src/infrai_email.ts`; PDF creation and email rendering live in `src/pdf_report.ts`. No SDK dependency anywhere.
 
 ## License
 
@@ -28,7 +28,7 @@ MIT
 
 ## Going to production: Game PDF Report Email
 
-The code stays simple on purpose — here's what to set up before going live: The details below apply to Game PDF Report Email.
+The code stays simple on purpose — here's what to sort out before going live: The details below apply to Game PDF Report Email.
 
 **Account & key**
 
